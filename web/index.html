@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batch Watermark Studio — 1000+ Rasmga Suv Belgisi Qo'yish</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon">💧</div>
+        <div>
+          <h1>Batch Watermark Studio</h1>
+          <p class="subtitle">1000+ ta rasmga yuqori sifatli va tezkor suv belgisi qo'yish tizimi</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-accent">⚡ 8 Yadro Parallel Tezlik</span>
+        <span class="badge badge-success">🛡 Asl nusxalar xavfsiz</span>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="workspace-grid">
+      <!-- Left Controls Panel -->
+      <section class="controls-panel">
+        <!-- 1. Folder Selection -->
+        <div class="card">
+          <div class="card-header">
+            <span class="step-num">1</span>
+            <h3>Rasmlar Manbasi</h3>
+          </div>
+
+          <div class="source-toggle-tabs">
+            <button type="button" class="source-tab active" id="tabSourceFolder">📁 Papka yo'li</button>
+            <button type="button" class="source-tab" id="tabSourceUpload">📤 Yuklash (Rasmlar / ZIP)</button>
+          </div>
+
+          <div id="folderSourceSection">
+            <div class="input-group">
+              <input type="text" id="folderInput" placeholder="/Users/.../Desktop/rasmlar" value="">
+              <button id="scanBtn" class="btn btn-secondary">Tekshirish</button>
+            </div>
+          </div>
+
+          <div id="uploadSourceSection" style="display: none;">
+            <div class="drop-zone batch-drop-zone" id="batchDropZone">
+              <div class="drop-icon">📦</div>
+              <p>Rasmlar yoki <strong>.ZIP</strong> arxivni bu yerga tashlang</p>
+              <span class="drop-hint">Bir nechta rasm yoki bitta ZIP faylni tanlang</span>
+              <input type="file" id="batchFileInput" multiple accept="image/*,.zip" style="display:none;">
+            </div>
+            <div id="batchUploadStatus" class="logo-preview-badge" style="display:none;"></div>
+          </div>
+
+          <div id="folderStatus" class="folder-status empty">
+            <span>ℹ️ Papka yo'lini kiriting yoki rasmlarni brauzerdan yuklang</span>
+          </div>
+        </div>
+
+        <!-- 2. Watermark Mode & Type -->
+        <div class="card">
+          <div class="card-header">
+            <span class="step-num">2</span>
+            <h3>Suv Belgisi Turi</h3>
+          </div>
+          
+          <div class="tab-selector">
+            <button class="tab-btn active" data-mode="text">✍️ Matn (Text)</button>
+            <button class="tab-btn" data-mode="image">🖼 Logo (PNG Rasm)</button>
+          </div>
+
+          <!-- Text Options -->
+          <div id="textControls" class="tab-content active">
+            <div class="form-row">
+              <label for="watermarkText">Matn mazmuni:</label>
+              <input type="text" id="watermarkText" value="@brend_nomi" placeholder="Masalan: @kanal_nomi yoki brend">
+            </div>
+
+            <div class="presets-row">
+              <span class="preset-tag highlight-tag" data-val="www.edu360.uz">www.edu360.uz</span>
+              <span class="preset-tag" data-val="@brend_nomi">@brend_nomi</span>
+              <span class="preset-tag" data-val="© 2026 Barcha huquqlar himoyalangan">© 2026 Huquqlar himoyalangan</span>
+              <span class="preset-tag" data-val="NAMUNA / PREVIEW">NAMUNA</span>
+            </div>
+
+            <div class="color-options-row">
+              <div class="color-picker-box">
+                <label>Rang:</label>
+                <input type="color" id="textColor" value="#ffffff">
+              </div>
+              <div class="color-picker-box">
+                <label>Kontur (Stroke):</label>
+                <input type="color" id="strokeColor" value="#000000">
+              </div>
+            </div>
+          </div>
+
+          <!-- Logo Options -->
+          <div id="logoControls" class="tab-content">
+            <div class="drop-zone" id="logoDropZone">
+              <div class="drop-icon">📁</div>
+              <p>Logo faylini bu yerga tashlang yoki tanlang (PNG)</p>
+              <span class="drop-hint">Shaffof fonli PNG tavsiya etiladi</span>
+              <input type="file" id="logoFileInput" accept="image/png,image/jpeg,image/webp" style="display:none;">
+            </div>
+            <div id="logoPreviewStatus" class="logo-preview-badge" style="display:none;">
+              <span>✅ Logo yuklandi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Canvas Frame & Image Zoom / Scale -->
+        <div class="card" id="canvasCard">
+          <div class="card-header">
+            <span class="step-num">3</span>
+            <div class="card-header-text">
+              <h3>1570×1002 Ramka va Rasm Masshtabi</h3>
+              <p class="subtitle">Turli xil katta/kichik rasmlarni 1570×1002 ramkaga moslash</p>
+            </div>
+            <label class="switch-toggle" title="Ramkani yoqish yoki o'chirish">
+              <input type="checkbox" id="canvasToggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div id="canvasControlsBody" class="canvas-controls-body">
+            <!-- Dimensions Info Badge -->
+            <div class="dim-banner">
+              <div class="dim-badge">
+                <span class="dim-dot"></span>
+                <span>Standart Canvas Ramkasi:</span>
+                <strong>1 570 × 1 002 px</strong>
+              </div>
+              <span class="dim-tag">Avtotest Standarti</span>
+            </div>
+
+            <!-- Image Zoom / Scale Slider -->
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="canvasZoomSlider">Ichki avtotest rasmi masshtabi (Zoom):</label>
+                <span id="canvasZoomVal" class="slider-val highlight-val">100% (Moslash)</span>
+              </div>
+              <input type="range" id="canvasZoomSlider" min="30" max="250" value="100">
+              
+              <!-- Quick Fit Presets -->
+              <div class="quick-preset-pills">
+                <button type="button" class="pill-btn active" id="btnFitAuto" data-zoom="100" data-mode="fit">⚡ Avto Moslash (Fit)</button>
+                <button type="button" class="pill-btn" id="btnFillCover" data-zoom="100" data-mode="cover">🖼 To'ldirish (Fill)</button>
+                <button type="button" class="pill-btn" id="btnZoom115" data-zoom="115" data-mode="fit">➕ 115% Katta</button>
+                <button type="button" class="pill-btn" id="btnZoom135" data-zoom="135" data-mode="fit">➕ 135%</button>
+                <button type="button" class="pill-btn" id="btnZoom85" data-zoom="85" data-mode="fit">➖ 85% Kichik</button>
+                <button type="button" class="pill-btn" id="btnOriginalSize" data-zoom="100" data-mode="original">100% Asl</button>
+              </div>
+            </div>
+
+            <!-- Border & Background Options Grid -->
+            <div class="canvas-options-grid">
+              <div class="canvas-opt-box">
+                <div class="checkbox-label-row">
+                  <input type="checkbox" id="borderToggle" checked>
+                  <label for="borderToggle">Ingichka ramka (Border):</label>
+                </div>
+                <div class="border-settings-inline">
+                  <select id="borderWidthSelect" class="styled-select">
+                    <option value="1" selected>1 px (Juda ingichka)</option>
+                    <option value="2">2 px (O'rta)</option>
+                    <option value="3">3 px (Qalinroq)</option>
+                    <option value="0">Ramkasiz</option>
+                  </select>
+                  <input type="color" id="borderColorInput" value="#ffffff" title="Ramka rangi">
+                </div>
+              </div>
+
+              <div class="canvas-opt-box">
+                <label for="canvasBgInput">Fon rangi (Canvas BG):</label>
+                <div class="bg-settings-inline">
+                  <input type="color" id="canvasBgInput" value="#000000" title="Fon rangi">
+                  <span id="canvasBgLabel" class="color-hex-label">#000000 (Qora)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Placement & Adjustments -->
+        <div class="card">
+          <div class="card-header">
+            <span class="step-num">4</span>
+            <h3>Joylashuv va Sozlamalar</h3>
+          </div>
+
+          <!-- Position Mode Selector -->
+          <div class="form-row">
+            <label>Joylashuv va Watermark uslubi:</label>
+            <div class="pattern-buttons-group">
+              <button class="pattern-btn edu360-btn active" id="edu360Btn" data-pos="diagonal-grid" type="button">
+                <div class="pattern-btn-glow"></div>
+                <div class="pattern-btn-content">
+                  <div class="pattern-badge-row">
+                    <span class="pattern-badge">TAVSIYA ETILADI</span>
+                    <span class="pattern-tag">Namuna uslubi</span>
+                  </div>
+                  <span class="pattern-title">🌐 Butun rasm bo'ylab diagonal (Edu360)</span>
+                  <span class="pattern-desc">Diagonal parallel panjara bo'ylab takrorlanuvchi to'liq himoya</span>
+                </div>
+              </button>
+
+              <div class="secondary-pattern-row">
+                <button class="pattern-btn tiled-btn" id="tiledBtn" data-pos="tiled" type="button">
+                  <span>🔲 Shaxmat (Tiled)</span>
+                </button>
+                <button class="pattern-btn single-pos-toggle-btn" id="singlePosToggleBtn" type="button">
+                  <span>📍 Burchak / Markaz</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Single Position Grid (Hidden by default when Edu360 is selected) -->
+            <div id="singlePositionContainer" class="single-position-container" style="display: none;">
+              <span class="sub-label">Rasm burchagi yoki markazini tanlang:</span>
+              <div class="position-grid">
+                <button class="pos-btn" data-pos="top-left" title="Yuqori chap">↖</button>
+                <button class="pos-btn" data-pos="top-center" title="Yuqori markaz">↑</button>
+                <button class="pos-btn" data-pos="top-right" title="Yuqori o'ng">↗</button>
+                <button class="pos-btn" data-pos="center" title="O'rtada">⊙</button>
+                <button class="pos-btn" data-pos="bottom-left" title="Pastki chap">↙</button>
+                <button class="pos-btn" data-pos="bottom-center" title="Pastki markaz">↓</button>
+                <button class="pos-btn" data-pos="bottom-right" title="Pastki o'ng">↘</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Density & Grid Settings (Active for Edu360 & Tiled) -->
+          <div class="slider-group" id="densityGroup">
+            <div class="slider-header">
+              <label for="densitySlider">Zichlik / Oraliq (Density):</label>
+              <span id="densityVal" class="slider-val">Standart (1.0x)</span>
+            </div>
+            <input type="range" id="densitySlider" min="4" max="25" value="10">
+            <div class="quick-preset-pills">
+              <button type="button" class="pill-btn" data-density="6">Siyrak (0.6x)</button>
+              <button type="button" class="pill-btn active" data-density="10">Standart (1.0x)</button>
+              <button type="button" class="pill-btn" data-density="16">Zich (1.6x)</button>
+            </div>
+          </div>
+
+          <!-- Grid Alignment Mode (Parallel vs Staggered) -->
+          <div class="form-row" id="gridAlignmentRow">
+            <label>Panjara tartibi:</label>
+            <div class="grid-align-toggle">
+              <button type="button" class="align-opt-btn active" id="alignParallelBtn" data-stagger="false">
+                <span>⚡ To'g'ri parallel (Edu360)</span>
+              </button>
+              <button type="button" class="align-opt-btn" id="alignStaggerBtn" data-stagger="true">
+                <span>🏁 Shaxmat (Offset)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Opacity Slider -->
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="opacitySlider">Shaffoflik (Opacity):</label>
+              <span id="opacityVal" class="slider-val">38%</span>
+            </div>
+            <input type="range" id="opacitySlider" min="10" max="100" value="38">
+            <div class="quick-preset-pills">
+              <button type="button" class="pill-btn" data-opacity="20">20% Nozik</button>
+              <button type="button" class="pill-btn active" data-opacity="38">38% Edu360</button>
+              <button type="button" class="pill-btn" data-opacity="60">60% O'rta</button>
+              <button type="button" class="pill-btn" data-opacity="85">85% Aniq</button>
+            </div>
+          </div>
+
+          <!-- Scale / Font Size Slider -->
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="scaleSlider">O'lcham / Masshtab:</label>
+              <span id="scaleVal" class="slider-val">4%</span>
+            </div>
+            <input type="range" id="scaleSlider" min="2" max="40" value="4">
+          </div>
+
+          <!-- Angle Slider -->
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="angleSlider">Qiyalash burchagi (Angle):</label>
+              <span id="angleVal" class="slider-val">12°</span>
+            </div>
+            <input type="range" id="angleSlider" min="-90" max="90" value="12">
+            <div class="quick-preset-pills">
+              <button type="button" class="pill-btn active" data-angle="12">12° (Edu360)</button>
+              <button type="button" class="pill-btn" data-angle="22">22°</button>
+              <button type="button" class="pill-btn" data-angle="45">45°</button>
+              <button type="button" class="pill-btn" data-angle="-30">-30°</button>
+              <button type="button" class="pill-btn" data-angle="0">0° To'g'ri</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Output Folder -->
+        <div class="card">
+          <div class="card-header">
+            <span class="step-num">5</span>
+            <h3>Natijalar Saqlanadigan Papka</h3>
+          </div>
+          <div class="input-group">
+            <input type="text" id="outputFolderInput" placeholder="Avtomatik yaratiladi: [Manba]/watermarked_output">
+          </div>
+          <small class="helper-text">Asl rasmlarga hech qanday ziyon yetmaydi, nusxasi alohida papkaga yoziladi.</small>
+        </div>
+
+        <!-- Action Button -->
+        <div class="action-card">
+          <button id="startBatchBtn" class="btn btn-primary btn-large" disabled>
+            <span class="btn-icon">⚡</span>
+            <span id="startBtnText">1000 ta rasmga qo'llash</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Preview Panel -->
+      <section class="preview-panel">
+        <div class="preview-header">
+          <div class="preview-title">
+            <h3>👁 Jonli Ko'rinish (Live Preview)</h3>
+            <span id="sampleInfo" class="sample-info">Namunaviy rasm</span>
+          </div>
+          <div class="preview-nav">
+            <span id="canvasDimIndicator" class="badge badge-accent" style="display:inline-flex;">📐 1570 × 1002 px</span>
+            <button id="prevSampleBtn" class="btn btn-sm btn-ghost" title="Oldingi rasm">← Oldingi</button>
+            <span id="sampleIndex">1 / 1</span>
+            <button id="nextSampleBtn" class="btn btn-sm btn-ghost" title="Keyingi rasm">Keyingi →</button>
+          </div>
+        </div>
+
+        <!-- Live Preview Stage -->
+        <div class="preview-stage" id="previewStage">
+          <div id="previewLoader" class="preview-loader" style="display:none;">
+            <div class="spinner"></div>
+            <span>Yuklanmoqda...</span>
+          </div>
+          <img id="previewImg" alt="Watermark Preview" style="display:none;">
+          <div id="noImagePlaceholder" class="placeholder-box">
+            <div class="placeholder-icon">🖼</div>
+            <h4>Rasmlar papkasini tanlang</h4>
+            <p>Chap tarafdagi papka yo'lini kiritib "Tekshirish" tugmasini bosing</p>
+          </div>
+        </div>
+
+        <!-- Progress Overlay / Modal Card -->
+        <div id="progressCard" class="card progress-card" style="display:none;">
+          <div class="progress-header">
+            <h4 id="progressTitle">⏳ Rasmlar qayta ishlanmoqda...</h4>
+            <span id="progressPercent" class="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="progressBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-stats">
+            <div>Tayyor bo'ldi: <strong id="statProcessed">0</strong> / <span id="statTotal">0</span></div>
+            <div>Tezlik: <strong id="statSpeed">0</strong> rasm/sek</div>
+            <div>Ketgan vaqt: <strong id="statTime">0</strong>s</div>
+          </div>
+          <div id="progressCurrentFile" class="progress-current-file">Tayyorlanmoqda...</div>
+          
+          <div id="completionActions" class="completion-actions" style="display:none;">
+            <button id="downloadZipBtn" class="btn btn-primary btn-large">
+              <span class="btn-icon">📥</span>
+              <span>Barcha rasmlarni ZIP qilib yuklab olish</span>
+            </button>
+            <button id="openFolderBtn" class="btn btn-secondary">
+              <span>📂 Papkani ochish (Lokal)</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

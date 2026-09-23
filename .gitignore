@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Processing Outputs & Temporary Uploads
+uploads/*
+!uploads/.gitkeep
+watermarked_output/*
+!watermarked_output/.gitkeep
+test_output/
+test_images/
+
+# Test generated images
+scratch_*.jpg
+preview_*.jpg
+test_*.jpg
+edu360_*.jpg
+
+# Editor / IDE artifacts
+.vscode/
+.idea/
+.gemini/

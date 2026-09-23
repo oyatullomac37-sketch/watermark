@@ -1,0 +1,26 @@
+# Systemd Service Unit for Batch Watermark Studio
+# Fayl yo'li: /etc/systemd/system/watermark.service
+# Ishga tushirish: sudo systemctl enable --now watermark
+
+[Unit]
+Description=Batch Watermark Studio Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/watermark
+Environment="HOST=127.0.0.1"
+Environment="PORT=7860"
+Environment="PATH=/var/www/watermark/venv/bin:/usr/bin:/bin"
+ExecStart=/var/www/watermark/venv/bin/python3 server.py
+Restart=always
+RestartSec=3
+
+# Xavfsizlik cheklovlari
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
