@@ -73,10 +73,28 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.end_headers_with_cors()
 
-    def do_GET(self):
+    def resolve_request_path(self):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
         query = urllib.parse.parse_qs(parsed.query)
+
+        vpath = query.get("__vpath", [""])[0]
+        if vpath:
+            path = vpath
+        elif path == "/server.py" or path == "":
+            path = "/"
+        elif path.startswith("/server.py"):
+            path = path[len("/server.py"):] or "/"
+
+        if path == "/server.py" or path == "":
+            header_uri = self.headers.get("x-matched-path") or self.headers.get("x-original-uri") or self.headers.get("x-forwarded-uri")
+            if header_uri:
+                path = urllib.parse.urlparse(header_uri).path
+
+        return path, query
+
+    def do_GET(self):
+        path, query = self.resolve_request_path()
 
         # Static files
         if path == "/" or path == "/index.html":
@@ -262,8 +280,7 @@ class handler(BaseHTTPRequestHandler):
             self.send_error(404, "Not Found")
 
     def do_POST(self):
-        parsed = urllib.parse.urlparse(self.path)
-        path = parsed.path
+        path, query = self.resolve_request_path()
 
         # API: Upload Logo
         if path == "/api/upload-logo":

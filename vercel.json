@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/server.py"
+      "destination": "/server.py?__vpath=/$1"
     }
   ]
 }
