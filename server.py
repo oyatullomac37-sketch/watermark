@@ -33,7 +33,18 @@ HOST = os.environ.get("HOST", "0.0.0.0")
 PORT = int(os.environ.get("PORT", 7860))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WEB_DIR = os.path.join(BASE_DIR, "web")
-UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
+
+# Safe directory setup for Serverless / Vercel (read-only filesystem except /tmp)
+IS_VERCEL = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+if IS_VERCEL:
+    UPLOADS_DIR = "/tmp/uploads"
+else:
+    try:
+        UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
+        os.makedirs(UPLOADS_DIR, exist_ok=True)
+    except OSError:
+        UPLOADS_DIR = "/tmp/uploads"
+
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 # Global batch processing state
@@ -50,7 +61,7 @@ batch_state = {
 }
 batch_lock = threading.Lock()
 
-class WatermarkHandler(BaseHTTPRequestHandler):
+class handler(BaseHTTPRequestHandler):
     def end_headers_with_cors(self, content_type="application/json"):
         self.send_header("Content-Type", content_type)
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -220,7 +231,7 @@ class WatermarkHandler(BaseHTTPRequestHandler):
                 with batch_lock:
                     folder = batch_state.get("output_folder", "")
             if not folder:
-                folder = os.path.join(BASE_DIR, "watermarked_output")
+                folder = "/tmp/watermarked_output" if IS_VERCEL else os.path.join(BASE_DIR, "watermarked_output")
             folder = os.path.expanduser(folder)
 
             if not os.path.exists(folder) or not os.path.isdir(folder):
@@ -298,9 +309,15 @@ class WatermarkHandler(BaseHTTPRequestHandler):
             data = json.loads(body.decode("utf-8"))
 
             input_folder = os.path.expanduser(data.get("input_folder", ""))
-            output_folder = os.path.expanduser(data.get("output_folder", ""))
             if not output_folder:
-                output_folder = os.path.join(input_folder, "watermarked_output")
+                if IS_VERCEL:
+                    output_folder = "/tmp/watermarked_output"
+                else:
+                    try:
+                        output_folder = os.path.join(input_folder, "watermarked_output")
+                        os.makedirs(output_folder, exist_ok=True)
+                    except OSError:
+                        output_folder = "/tmp/watermarked_output"
 
             mode = data.get("mode", "text")
             params = data.get("params", {})
@@ -467,8 +484,13 @@ class WatermarkHandler(BaseHTTPRequestHandler):
         # Clean terminal output
         pass
 
+# Top-level exports for Vercel Serverless Function and backward compatibility
+WatermarkHandler = handler
+app = handler
+application = handler
+
 def run_server(host=HOST, port=PORT):
-    server = HTTPServer((host, port), WatermarkHandler)
+    server = HTTPServer((host, port), handler)
     display_host = "127.0.0.1" if host == "0.0.0.0" else host
     print(f"\n" + "=" * 58)
     print(f" 🚀 WATERMARK WEB BOSHQARUV PANELI ISHGA TUSHDI")

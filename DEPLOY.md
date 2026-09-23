@@ -69,6 +69,14 @@ Loyiha ichida `Procfile` mavjud:
 2. Loyiha fayllarini (Dockerfile bilan birga) Space repozitoriyasiga yuklang.
 3. Hugging Face avtomatik ravishda `7860` portida ishlaydigan bepul serverni ishga tushiradi.
 
+### D) Vercel.com
+Loyihada Vercel uchun `vercel.json` va Serverless `handler` eksporti to'liq tayyorlangan:
+1. [Vercel.com](https://vercel.com) ga kiring va **Add New -> Project** orqali `watermark` repozitoriyangizni tanlang.
+2. Hech qanday sozlamalarni o'zgartirmasdan **Deploy** tugmasini bosing.
+3. Vercel bir necha soniyada bepul `https://watermark-xxxx.vercel.app` domenini beradi.
+
+> ⚠️ **Muhim Eslatma:** Vercel serverless platforma bo'lib, bepul tarifda har bir so'rovga maksimal **10 soniya** timeout beradi. Shuning uchun 500-1000 ta juda katta rasmlarni uzluksiz qayta ishlash uchun **Render.com**, **Railway** yoki **Docker VPS** (timeout cheklovisiz) tavsiya etiladi. Vercel esa tezkor sinov va kichikroq to'plamlar uchun juda qulaydir.
+
 ---
 
 ## 3-Usul: Linux VPS Serverda (Ubuntu / Debian)
